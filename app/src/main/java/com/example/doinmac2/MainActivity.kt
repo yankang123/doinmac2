@@ -1,14 +1,16 @@
-package com.example.finishallbyme
+package com.example.doinmac2
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,15 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.finishallbyme.finishall.FinishAllAdapter
 import com.example.finishallbyme.finishall.finishData
 import com.example.practicekotlin.R
+import java.util.Timer
+import java.util.TimerTask
 
 
 class MainActivity : AppCompatActivity() {
     var list = ArrayList<finishData>()
+    var edit_dialog :EditText?=null
 
-    //aaa
-    //1
-
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,13 +36,38 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = FinishAllAdapter(list)
         recyclerView.adapter = myAdapter
         val button_dialog = findViewById<Button>(R.id.dialog_button)
+        edit_dialog=findViewById(R.id.edit_test)
+        edit_dialog?.setFocusable(true);
+        edit_dialog?.setFocusableInTouchMode(true);
+//请求获得焦点
+        edit_dialog?.requestFocus()
         button_dialog.setOnClickListener {
 
             showBottomDialog()
+//            edit_dialog?.requestFocus()//获取焦点
+//            val timer = Timer()
+
+
+            var timer = Timer()
+            timer.schedule(object : TimerTask() {
+                override fun run() {
+                    edit_dialog=findViewById(R.id.edit_dialog)
+                    //设置可获得焦点
+                    edit_dialog?.isFocusable = true
+                    edit_dialog?.isFocusableInTouchMode = true
+                    edit_dialog?.requestFocus()
+                    val inputManager: InputMethodManager? =
+                        this@MainActivity?. getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+
+                    inputManager?.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+
+
+                }
+            }
+                , 1000)
+
         }
-
     }
-
     fun initList() {
         for (i in 1..15) {
             list.add(finishData(true, "hahahh"))
@@ -49,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.R)
+
     fun showBottomDialog() {
         val dialog = Dialog(this, R.style.DialogTheme)
         val view = View.inflate(this,R.layout.dialog_edit,null)
@@ -68,8 +94,10 @@ class MainActivity : AppCompatActivity() {
         window?.let {
             it.setGravity(Gravity.BOTTOM)
             it.setWindowAnimations(R.style.my_style)
-            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,400)
+//            TODO("适配大小")
             dialog.show()
+            edit_dialog=findViewById(R.id.edit_dialog)
         }
 
     }
