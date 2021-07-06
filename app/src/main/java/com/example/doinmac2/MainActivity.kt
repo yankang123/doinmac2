@@ -2,6 +2,7 @@ package com.example.doinmac2
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -15,9 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.doinmac2.okhttp.OkhttpActivity
 import com.example.finishallbyme.finishall.FinishAllAdapter
 import com.example.finishallbyme.finishall.finishData
-import com.example.practicekotlin.R
+import com.example.doinmac2.R
 import java.util.Timer
 import java.util.TimerTask
 
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        startActivity(Intent(this,OkhttpActivity::class.java))
         initList()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_finish)
         val layoutManager = LinearLayoutManager(this)

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.practicekotlin.R
+import com.example.doinmac2.R
 
 
 class FinishAllAdapter(private val list:ArrayList<finishData>)
