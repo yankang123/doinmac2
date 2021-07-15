@@ -6,7 +6,8 @@
     android:layout_height="match_parent">
 <TextView
     android:text="IIIII"
-    android:textSize="10sp"
+    android:textColor="@color/black"
+    android:textSize="15sp"
     android:background="@color/purple_500"
     android:gravity="center"
     android:layout_width="match_parent"

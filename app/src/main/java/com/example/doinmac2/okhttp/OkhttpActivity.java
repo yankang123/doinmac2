@@ -8,6 +8,10 @@ import android.util.Log;
 import com.example.doinmac2.R;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,6 +29,7 @@ public class OkhttpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_okhttp2);
         require();
+        threadPool();
     }
     public void require(){
         MediaType mediaType=MediaType.parse("text,charset=utf-8");
@@ -59,4 +64,19 @@ public class OkhttpActivity extends AppCompatActivity {
         });
 
     }
+
+    public void  threadPool(){
+        ThreadPoolExecutor executor =new ThreadPoolExecutor(5,10,200, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(5));
+        for(int i=0;i<15;i++){
+            MyTask myTask= new MyTask(i);
+            executor.execute(myTask);
+            Log.d("八", "threadPool: "
+            +"线程池中线程树木"+executor.getPoolSize()+",队列中等待执行的任务树木"
+                    +executor.getQueue().size()+",一执行完任务树木"+executor.getCompletedTaskCount()
+            );
+        }
+    }
+
+
 }

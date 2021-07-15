@@ -20,74 +20,60 @@ import com.example.doinmac2.okhttp.OkhttpActivity
 import com.example.finishallbyme.finishall.FinishAllAdapter
 import com.example.finishallbyme.finishall.finishData
 import com.example.doinmac2.R
+import com.example.doinmac2.mpdel.User
+//import com.example.doinmac2.mpdel.AppDatabase
+//import com.example.doinmac2.mpdel.Item
+import com.example.doinmac2.paixu.SortActivity
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
     var list = ArrayList<finishData>()
     var edit_dialog :EditText?=null
+    var view:View? = null
+    var dialog :Dialog?= null
+    var button_dialog: Button?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        startActivity(Intent(this,OkhttpActivity::class.java))
+        view=View.inflate(this,R.layout.dialog_edit,null)
+        edit_dialog=findViewById(R.id.edit_dialog)
+        dialog=Dialog(this, R.style.DialogTheme)
+        view?.let { dialog?.setContentView(it) }
+        button_dialog=view?.findViewById(R.id.btn_dialog)
+
         initList()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_finish)
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        val myAdapter = FinishAllAdapter(list)
+        val myAdapter = FinishAllAdapter(list,this)
         recyclerView.adapter = myAdapter
-        val button_dialog = findViewById<Button>(R.id.dialog_button)
-        edit_dialog=findViewById(R.id.edit_test)
-        edit_dialog?.setFocusable(true);
-        edit_dialog?.setFocusableInTouchMode(true);
-//请求获得焦点
-        edit_dialog?.requestFocus()
-        button_dialog.setOnClickListener {
+      button_dialog?.setOnClickListener {
+          thread{
 
-            showBottomDialog()
-//            edit_dialog?.requestFocus()//获取焦点
-//            val timer = Timer()
-
-
-            var timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    edit_dialog=findViewById(R.id.edit_dialog)
-                    //设置可获得焦点
-                    edit_dialog?.isFocusable = true
-                    edit_dialog?.isFocusableInTouchMode = true
-                    edit_dialog?.requestFocus()
-                    val inputManager: InputMethodManager? =
-                        this@MainActivity?. getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-
-                    inputManager?.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
-
-
-                }
-            }
-                , 1000)
-
-        }
+              val itemDao = AppDatabase.getDatabase(this).userDao()
+              itemDao.insertUser(User("y", edit_dialog?.text.toString(), 1))
+          }
+      }
     }
     fun initList() {
-        for (i in 1..15) {
-            list.add(finishData(true, "hahahh"))
+        for (i in 1..10) {
+            list.add(finishData(true, "我是好人"))
         }
     }
 
 
 
     fun showBottomDialog() {
-        val dialog = Dialog(this, R.style.DialogTheme)
-        val view = View.inflate(this,R.layout.dialog_edit,null)
-        dialog.setContentView(view)
+
         val display = windowManager.defaultDisplay
-        val window = dialog.window
+        val window = dialog?.window
 
         //设置该属性，dialog可以铺满屏幕
-        dialog.getWindow()?.setBackgroundDrawable(null);
+        dialog?.getWindow()?.setBackgroundDrawable(null);
 //        val lp: WindowManager.LayoutParams? = window?.getAttributes()
 //        lp?.width = (display.width)
 //        lp?.y = 20 //设置Dialog距离底部的距离
@@ -99,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             it.setWindowAnimations(R.style.my_style)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,400)
 //            TODO("适配大小")
-            dialog.show()
+            dialog?.show()
             edit_dialog=findViewById(R.id.edit_dialog)
         }
 
