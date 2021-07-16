@@ -1,14 +1,13 @@
+package com.example.doinmac2.mpdel
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.doinmac2.mpdel.Item
-import com.example.doinmac2.mpdel.ItemDao
-import com.example.doinmac2.mpdel.User
-import com.example.doinmac2.mpdel.UserDao
 
-@Database(version = 2, entities = [User::class])
-abstract class AppDatabase : RoomDatabase() {
+@Database(version = 2,entities = [User::class])
+abstract class AppDatabase : RoomDatabase() {//TODO(fault_Memory:@有个波浪，
+// TODO(没报错，开始也没看见，所以room看不到注解，也就找不到Appdatabase)
 
     abstract fun userDao(): UserDao
 
@@ -16,11 +15,10 @@ abstract class AppDatabase : RoomDatabase() {
         private var instance: AppDatabase? = null
         @Synchronized
         fun getDatabase(context: Context): AppDatabase {
-            return instance?.let { it }
-                ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "app_database")
-                    .allowMainThreadQueries()
-                    .build()
-                    .apply { instance = this }
+           instance?.let { return it }
+            return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java,"app_database")
+                .fallbackToDestructiveMigration() .allowMainThreadQueries()  .build().apply { instance =this }
         }
     }
 }
+//@Database(version = 1, entities = [User::class])

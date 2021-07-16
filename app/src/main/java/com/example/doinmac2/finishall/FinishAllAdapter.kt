@@ -57,7 +57,8 @@ class FinishAllAdapter(private val list:ArrayList<finishData>,val activity: Main
 
    public  fun showSoftInput(){
        var timer = Timer()
-       val edit_dialog = activity.view?.findViewById<EditText>(R.id.edit_dialog)
+       //TODO("activity 获取一次，这里又find 一次，似乎把原先的对象给夺过来了，所以，showdialog方法后，editdialog全是null")
+       val edit_dialog = activity.edit_dialog
        //设置可获得焦点
        edit_dialog?.isFocusable = true
        edit_dialog?.isFocusableInTouchMode = true
